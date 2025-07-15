@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, distinct, cast, text, desc
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import scoping, sessionmaker
 from dotenv import load_dotenv
 import os
