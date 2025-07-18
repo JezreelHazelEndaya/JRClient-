@@ -1,5 +1,6 @@
 import uuid
 import related
+from sqlalchemy.dialects.postgresql import JSONB
 
 from sqlalchemy import (
     BigInteger,
@@ -57,7 +58,7 @@ class File(Base):
     md5 = Column(String(32))
     last_modified_date = Column(DateTime(timezone=True), server_default=func.now())
     source = Column(Text)
-    meta_data = Column(JSONType, server_default="{}")
+    meta_data = Column(JSONB, server_default="{}")
     date_created = Column(DateTime(timezone=True), server_default=func.now())
     s3_location = Column(Text)
     status = Column(Text, server_default="UNKNOWN")
