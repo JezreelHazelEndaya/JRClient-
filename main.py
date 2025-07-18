@@ -273,7 +273,7 @@ def fetch_total_and_cancelled_jobs():
             counter += 1
 
         logging.info(f"Successfully fetch_total_and_cancelled_jobs")
-        return [{"day_date": day_date, "TOTAL": job_count, "CANCELLED": cancelled_job} for day_date,job_count,cancelled_job in job_tup]
+        return [{"DATE": day_date, "TOTAL": job_count, "CANCELLED": cancelled_job} for day_date,job_count,cancelled_job in job_tup]
     except Exception as e:
         logging.error("error in fetch_total_and_cancelled_jobs",e)
         return []
@@ -298,20 +298,16 @@ def fetch_jobs_by_source_category():
         for source, count in source_counts:
             if source is None or source.strip() == "":
                 source = "N/A"
-
             if count >= 1000:
                 over_1000[source] = count
             elif count < 1000:
                 sum_under_1000 += count
-
-
+                
         sorted_over_1000 = dict(sorted(over_1000.items(), key=lambda item: item[1], reverse=True))
         sorted_over_1000["Sources w/ Job <1000"] = sum_under_1000
-
         logging.info(f"Successfully fetch_jobs_by_source_category")
         return [{'Sources': sources, 'Jobs': jobs} for sources, jobs in sorted_over_1000.items()]
 
-    
     except Exception as e:
         logging.error("error in fetch_jobs_by_source_category",e)
         return []
@@ -356,7 +352,7 @@ if __name__ == "__main__":
     source_category_summary = sourceCategory_count()
     job_done_with_SLA = fetch_SLA_jobs()
     job_per_source = fetch_jobs_by_source_category()
-    # total_job_count = fetch_total_and_cancelled_jobs()
+    total_job_count = fetch_total_and_cancelled_jobs()
 
     logging.info("Generating Powerpoint")
     prs = ppt(path)
@@ -390,16 +386,11 @@ if __name__ == "__main__":
         table_data2=None,
         table_graph=job_done_with_SLA)
     
-    # generate_ppt(prs, 
-    #     title="Jobs by Source Category", 
-    #     table_data=job_per_source, 
-    #     table_data2=None,
-    #     table_graph=job_per_source)
-    
-    # generate_ppt(prs, 
-    #     title="Job Received Count", 
-    #     table_data=total_job_count, 
-    #     table_data2=None,
-    #     table_graph=total_job_count)
+
+    generate_ppt(prs, 
+        title="Job Received Count", 
+        table_data=total_job_count, 
+        table_data2=None,
+        table_graph=total_job_count)
 
     logging.info("Powerpoint Generated")
